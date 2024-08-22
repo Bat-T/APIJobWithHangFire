@@ -1,0 +1,6 @@
+@APIJobWithHangFire_HostAddress = http://localhost:5202
+
+GET {{APIJobWithHangFire_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
