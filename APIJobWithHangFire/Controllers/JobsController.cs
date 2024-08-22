@@ -42,7 +42,7 @@ namespace APIJobWithHangFire.Controllers
             _recurringJobManager.AddOrUpdate(
                 "every-2-seconds-job",
                 () => _jobService.TriggerJob($"reccuring-2-seconds-job: Scheduler Job Ran at {DateTime.Now.ToString()}"),
-                CustomCron.EveryNSeconds(2) // Runs every 2 seconds
+                "50 4 * * *" // Runs every 2 seconds
             );
             return Ok("Recurring job scheduled to run every 2 seconds!");
         }

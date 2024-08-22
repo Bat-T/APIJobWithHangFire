@@ -27,10 +27,12 @@ builder.Services.AddHangfireServer();
 
 // Add MyJobService to DI container
 builder.Services.AddTransient<IJobService,JobService>();
+builder.Services.AddTransient<IRecurringJobService, RecurringJobService>();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddSingleton<LongRunningTask>();
 
 var app = builder.Build();
 
@@ -59,16 +61,9 @@ app.UseHangfireDashboard();
 
 
 // Schedule a recurring job at a specific time every day
-RecurringJob.AddOrUpdate<IJobService>(
-    "daily-job",
-    job => job.TriggerJob($"daily-job: Scheduler Job Ran at {DateTime.Now.ToString()}"),
-    "18 16 * * *" // Cron expression to run the job every day at 4:18 pm
-                  /*The cron expression "6 16 * * *" is structured as follows:
-                   * 15 - The minute when the job should run(6th minute of the hour).
-                   * 16 - The hour when the job should run(16th hour, which is 4 PM in a 24 - hour format).
-                   * * -Any day of the month.
-                   * * -Any month.
-                   * * -Any day of the week.*/
+RecurringJob.AddOrUpdate<IRecurringJobService>(
+    "interval-job1",
+    job => job.AddOrUpdateJob(), $"0 {DateTime.Now.Hour}/1 * * *",new RecurringJobOptions() { TimeZone = TimeZoneInfo.Local}
 );
 
 app.Run();
