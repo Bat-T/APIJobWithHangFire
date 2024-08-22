@@ -3,6 +3,7 @@ using Hangfire;
 using Hangfire.Common;
 using Hangfire.Redis.StackExchange;
 using StackExchange.Redis;
+using System.Net;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -48,6 +49,14 @@ app.MapControllers();
 
 // Hangfire Dashboard (Optional)
 app.UseHangfireDashboard();
+
+
+//If we need to add any type of authorization
+//app.UseHangfireDashboard("/hangfire", new DashboardOptions
+//{
+//    Authorization = new[] { new HangfireCustomAuthorizationFilter(app.Services.GetService<IHttpContextAccessor>()) }
+//});
+
 
 // Schedule a recurring job at a specific time every day
 RecurringJob.AddOrUpdate<IJobService>(
